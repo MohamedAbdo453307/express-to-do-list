@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 function connectDB() {
   mongoose
-    .connect("mongodb://localhost/todolist")
+    .connect(process.env.DB_URL)
     .then(() => {
       console.log("Connected To MongoDB");
     })
     .catch((error) => {
-      console.log("DB Connection Error:", error);
+      console.log("DB Connection Error:", error.message);
     });
 }
 
