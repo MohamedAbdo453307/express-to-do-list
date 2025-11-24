@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Todo List</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        background-color: #f0f8ff;
+      }
+      .todo-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .task-done {
+        text-decoration: line-through;
+        color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="todo-container">
+      <h1 class="text-center mb-4">My Todo List</h1>
+
+      <!-- Form لإضافة مهمة جديدة -->
+      <form id="add-task-form" class="mb-4" action="/tasks" method="POST">
+        <div class="input-group">
+          <input
+            type="text"
+            name="title"
+            class="form-control"
+            placeholder="New Task"
+            required
+          />
+          <div class="input-group-text">
+            <label class="mb-0">
+              Done
+              <input type="checkbox" name="done" class="ms-1" />
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary">Add Task</button>
+        </div>
+      </form>
+
+      <!-- قائمة المهام -->
+      <ul id="task-list" class="list-group">
+        <% tasks.forEach(task => { %>
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center <%= task.completed ?'completed' : '' %>"
+          data-id="<%= task.id %>"
+        >
+          <span class="task-title"><%= task.title %></span>
+          <div>
+            <div class="d-flex gap-2">
+              <!-- استخدام flex مع gap لتباعد الأزرار -->
+              <form
+                action="/tasks/<%=task.id%>?_method=PUT"
+                method="POST"
+                class="d-flex gap-2 align-items-center m-0"
+              >
+              
+                <input
+                  type="text"
+                  name="title"
+                  value="<%= task.title %>"
+                  placeholder="Edit"
+                  class="form-control form-control-sm"
+                />
+                <input type="checkbox" name="completed" <%= task.completed ?
+                'checked' : '' %> class="ms-2" />
+
+                <button type="submit" class="btn btn-success btn-sm">
+                  Save
+                </button>
+              </form>
+              <form
+                action="/tasks/<%=task.id%>?_method=DELETE"
+                method="POST"
+                class="m-0"
+              >
+                <button type="submit" class="btn btn-danger btn-sm">
+                  Delete
+                </button>
+              </form>
+            </div>
+          </div>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Q2B9gA+XZhjR0jIkuI1+r6ZK9n63rY+J6ZxZ2iC7EdP9JpxV5Z0K+q9F+0t0kJ+L"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
