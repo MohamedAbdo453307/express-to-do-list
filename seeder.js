@@ -1,30 +1,36 @@
-const express = require("express");
-const router = express.Router();
-const {Task} = require("./models/Todo");
+const { Task } = require("./models/Todo");
 const asyncHandler = require("express-async-handler");
 const data = require("./data");
+const connectDB = require("./config/db");
+connectDB();
 /**
- * @route   POST /tasks
  * @desc    Insert all tasks to the database
  * @access  Public
  */
-router.post(
-  "/",
-  asyncHandler(async (req, res) => {
-    const tasks = await Task.insertMany(data);
-    res.status(201).json({ message: "Done", tasks });
-  })
-);
+const importAllTasks = async function () {
+  try {
+    await Task.insertMany(data);
+    console.log("All Tasks Is Imported ..");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 /**
- * @route   DELETE /tasks
  * @desc    Delete all tasks from the database
  * @access  Public
  */
-router.delete(
-  "/",
-  asyncHandler(async (req, res) => {
+const deleteAllTask = async function () {
+  try {
     await Task.deleteMany({});
-    res.status(200).json({ message: "All tasks has been deleted" });
-  })
-);
-module.exports = router;
+    console.log("All tasks has been deleted");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+if (process.argv[2] === "-import") {
+  importAllTasks();
+} else if (process.argv[2] === "-remove") {
+  deleteAllTask();
+}
